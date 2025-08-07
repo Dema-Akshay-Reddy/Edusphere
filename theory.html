@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EduSphere Theory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      margin: 0;
+      padding: 0;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .theory-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .module-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .module-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #6e8efb;
+    }
+
+    .module-title {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+
+    .module-subject {
+      color: #666;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .content-section {
+      margin: 2rem 0;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      position: relative;
+      padding-left: 1rem;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      border-radius: 2px;
+    }
+
+    .content-text {
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .example-box {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .example-title {
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .example-content {
+      color: #666;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+
+    .key-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .key-point {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .key-point:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .key-point-icon {
+      font-size: 1.5rem;
+      color: #6e8efb;
+      margin-bottom: 0.5rem;
+    }
+
+    .key-point-title {
+      color: #2c3e50;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+
+    .key-point-desc {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .practice-btn {
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: #fff;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+      display: block;
+      margin: 2rem auto;
+      text-align: center;
+      width: fit-content;
+    }
+
+    .practice-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(110, 142, 251, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="back-btn" onclick="window.location.href='subject.html'">← Back</button>
+    <span id="pageTitle">Theory</span>
+  </header>
+
+  <div class="container">
+    <div class="theory-container">
+      <div class="module-header">
+        <div class="module-icon" id="moduleIcon">📚</div>
+        <h1 class="module-title" id="moduleTitle">Module Title</h1>
+        <p class="module-subject" id="moduleSubject">Subject</p>
+      </div>
+
+      <div class="content-section">
+        <h2 class="section-title">Introduction</h2>
+        <p class="content-text" id="introduction">
+          Loading content...
+        </p>
+      </div>
+
+      <div class="content-section">
+        <h2 class="section-title">Key Concepts</h2>
+        <div class="key-points" id="keyPoints">
+          <!-- Key points will be added here dynamically -->
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2 class="section-title">Examples</h2>
+        <div id="examples">
+          <!-- Examples will be added here dynamically -->
+        </div>
+      </div>
+
+      <button class="practice-btn" onclick="startPractice()">Practice Now</button>
+    </div>
+  </div>
+
+  <script>
+    // Check authentication
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = 'login.html';
+    }
+
+    // Get subject and module from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const subject = urlParams.get('subject');
+    const module = urlParams.get('module');
+
+    if (!subject || !module) {
+      window.location.href = 'subject.html';
+    }
+
+    // Module icons
+    const moduleIcons = {
+      'basic-arithmetic': '➕',
+      'algebra-fundamentals': '📊',
+      'geometry-basics': '📐',
+      'grammar-essentials': '📝',
+      'vocabulary-building': '📚',
+      'reading-comprehension': '📖',
+      'physics-basics': '⚛️',
+      'chemistry-fundamentals': '🧪',
+      'biology-essentials': '🔬'
+    };
+
+    // Module titles
+    const moduleTitles = {
+      'basic-arithmetic': 'Basic Arithmetic',
+      'algebra-fundamentals': 'Algebra Fundamentals',
+      'geometry-basics': 'Geometry Basics',
+      'grammar-essentials': 'Grammar Essentials',
+      'vocabulary-building': 'Vocabulary Building',
+      'reading-comprehension': 'Reading Comprehension',
+      'physics-basics': 'Physics Basics',
+      'chemistry-fundamentals': 'Chemistry Fundamentals',
+      'biology-essentials': 'Biology Essentials'
+    };
+
+    // Subject titles
+    const subjectTitles = {
+      'math': 'Mathematics',
+      'english': 'English',
+      'science': 'Science'
+    };
+
+    // Update page information
+    document.getElementById('moduleIcon').textContent = moduleIcons[module] || '📚';
+    document.getElementById('moduleTitle').textContent = moduleTitles[module] || 'Module';
+    document.getElementById('moduleSubject').textContent = subjectTitles[subject] || 'Subject';
+    document.getElementById('pageTitle').textContent = moduleTitles[module] || 'Theory';
+
+    // Load module content
+    const moduleContent = {
+      'basic-arithmetic': {
+        introduction: 'Basic arithmetic is the foundation of mathematics. It includes the four basic operations: addition, subtraction, multiplication, and division. Understanding these operations is crucial for solving more complex mathematical problems.',
+        keyPoints: [
+          {
+            icon: '➕',
+            title: 'Addition',
+            description: 'Combining two or more numbers to find their total.'
+          },
+          {
+            icon: '➖',
+            title: 'Subtraction',
+            description: 'Finding the difference between two numbers.'
+          },
+          {
+            icon: '✖️',
+            title: 'Multiplication',
+            description: 'Repeated addition of the same number.'
+          },
+          {
+            icon: '➗',
+            title: 'Division',
+            description: 'Splitting a number into equal parts.'
+          }
+        ],
+        examples: [
+          {
+            title: 'Addition Example',
+            content: '5 + 3 = 8\n\nThis means if you have 5 apples and add 3 more, you have 8 apples in total.'
+          },
+          {
+            title: 'Subtraction Example',
+            content: '10 - 4 = 6\n\nIf you have 10 candies and give away 4, you have 6 candies left.'
+          }
+        ]
+      },
+      // Add content for other modules here
+    };
+
+    // Update content
+    const content = moduleContent[module] || {
+      introduction: 'Content coming soon...',
+      keyPoints: [],
+      examples: []
+    };
+
+    document.getElementById('introduction').textContent = content.introduction;
+
+    // Add key points
+    const keyPointsContainer = document.getElementById('keyPoints');
+    content.keyPoints.forEach(point => {
+      const keyPoint = document.createElement('div');
+      keyPoint.className = 'key-point';
+      keyPoint.innerHTML = `
+        <div class="key-point-icon">${point.icon}</div>
+        <h3 class="key-point-title">${point.title}</h3>
+        <p class="key-point-desc">${point.description}</p>
+      `;
+      keyPointsContainer.appendChild(keyPoint);
+    });
+
+    // Add examples
+    const examplesContainer = document.getElementById('examples');
+    content.examples.forEach(example => {
+      const exampleBox = document.createElement('div');
+      exampleBox.className = 'example-box';
+      exampleBox.innerHTML = `
+        <h3 class="example-title">${example.title}</h3>
+        <pre class="example-content">${example.content}</pre>
+      `;
+      examplesContainer.appendChild(exampleBox);
+    });
+
+    // Function to start practice
+    function startPractice() {
+      window.location.href = `quiz.html?subject=${subject}&difficulty=easy`;
+    }
+  </script>
+</body>
+</html> 

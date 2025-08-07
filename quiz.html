@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EduSphere Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      margin: 0;
+      padding: 0;
+      color: #222;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .quiz-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .question-container {
+      margin-bottom: 2rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    .question {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    .options {
+      display: grid;
+      gap: 1rem;
+    }
+    .option {
+      background: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .option:hover {
+      background: #f0f0f0;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .option.selected {
+      border-color: #6e8efb;
+      background: #e8eaf6;
+    }
+    .option.correct {
+      border-color: #4caf50;
+      background: #e8f5e9;
+      animation: correctAnswer 0.5s ease-out;
+    }
+    .option.incorrect {
+      border-color: #f44336;
+      background: #ffebee;
+      animation: incorrectAnswer 0.5s ease-out;
+    }
+    @keyframes correctAnswer {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes incorrectAnswer {
+      0% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-5px);
+      }
+      50% {
+        transform: translateX(5px);
+      }
+      75% {
+        transform: translateX(-5px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+    .solution-container {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .solution-title {
+      color: #2c3e50;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .solution-text {
+      color: #666;
+      line-height: 1.6;
+    }
+    .next-btn {
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: #fff;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 2rem;
+      display: none;
+      box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+    }
+    .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(110, 142, 251, 0.4);
+    }
+    .progress-bar {
+      height: 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .progress {
+      height: 100%;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .progress-counter {
+      text-align: right;
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .result-container {
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .result-title {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .score {
+      font-size: 3.5rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 1rem 0;
+      animation: scaleIn 0.5s ease-out;
+    }
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    .restart-btn {
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: #fff;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 2rem;
+      box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+    }
+    .restart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(110, 142, 251, 0.4);
+    }
+    .improvement-suggestions {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: left;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .suggestions-title {
+      color: #2c3e50;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .suggestions-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .suggestion-item {
+      margin: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: #666;
+      line-height: 1.6;
+    }
+    .suggestion-item:before {
+      content: "•";
+      color: #6e8efb;
+      position: absolute;
+      left: 0;
+      font-size: 1.2rem;
+    }
+
+    /* Gamification Styles */
+    .feedback-message {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      z-index: 1000;
+      animation: bounceIn 0.5s ease-out;
+      text-align: center;
+    }
+
+    .success-message {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .error-message {
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+      color: white;
+      box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+    }
+
+    @keyframes bounceIn {
+      0% {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, 20%);
+      }
+      70% {
+        transform: translate(-50%, -10%);
+      }
+      100% {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: #f00;
+      opacity: 0;
+      animation: confetti-fall 3s ease-in-out forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="back-btn" id="backBtn">← Back</button>
+    <span id="quizTitle">Quiz</span>
+  </header>
+  <div class="container">
+    <div class="quiz-container">
+      <div class="progress-bar">
+        <div class="progress" id="progressBar"></div>
+      </div>
+      <div class="progress-counter" id="progressCounter"></div>
+      <div id="quizContent">
+        <div class="question-container">
+          <h2 class="question" id="question"></h2>
+          <div class="options" id="options"></div>
+        </div>
+        <div class="solution-container" id="solutionContainer">
+          <h3 class="solution-title">Solution</h3>
+          <p class="solution-text" id="solutionText"></p>
+        </div>
+        <button class="next-btn" id="nextBtn">Next Question</button>
+      </div>
+      <div class="result-container" id="resultContainer">
+        <h2 class="result-title">Quiz Completed!</h2>
+        <div class="score" id="score">0%</div>
+        <button class="restart-btn" id="restartBtn">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check authentication
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = 'login.html';
+    }
+
+    // Get quiz parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const subject = urlParams.get('subject');
+    const difficulty = urlParams.get('difficulty');
+
+    if (!subject || !difficulty) {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Set quiz title
+    document.getElementById('quizTitle').textContent = 
+      `${subject.charAt(0).toUpperCase() + subject.slice(1)} Quiz - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+
+    // Quiz data
+    const quizData = {
+      math: {
+        easy: [
+          {
+            question: "What is 2 + 2?",
+            options: ["3", "4", "5", "6"],
+            correct: 1,
+            solution: "The correct answer is 4. When you add 2 and 2 together, you get 4. This is a basic addition fact that shows combining two quantities of 2 results in a total of 4."
+          },
+          {
+            question: "What is 5 × 3?",
+            options: ["10", "12", "15", "18"],
+            correct: 2,
+            solution: "The correct answer is 15. Multiplication is repeated addition. 5 × 3 means adding 5 three times: 5 + 5 + 5 = 15."
+          },
+          {
+            question: "What is 12 ÷ 4?",
+            options: ["2", "3", "4", "5"],
+            correct: 1,
+            solution: "The correct answer is 3. Division is the inverse of multiplication. 12 ÷ 4 = 3 because 4 × 3 = 12."
+          },
+          {
+            question: "What is 7 - 3?",
+            options: ["3", "4", "5", "6"],
+            correct: 1,
+            solution: "The correct answer is 4. Subtraction means taking away. When you take 3 away from 7, you are left with 4."
+          },
+          {
+            question: "What is 3²?",
+            options: ["6", "9", "12", "15"],
+            correct: 1,
+            solution: "The correct answer is 9. Squaring a number means multiplying it by itself. 3² = 3 × 3 = 9."
+          }
+        ],
+        medium: [
+          {
+            question: "Solve for x: 2x + 5 = 15",
+            options: ["3", "4", "5", "6"],
+            correct: 2,
+            solution: "The correct answer is 5. To solve for x, first subtract 5 from both sides: 2x = 10. Then divide both sides by 2: x = 5."
+          },
+          {
+            question: "What is the area of a rectangle with length 8 and width 5?",
+            options: ["13", "26", "40", "45"],
+            correct: 2,
+            solution: "The correct answer is 40. The area of a rectangle is calculated by multiplying its length by its width: 8 × 5 = 40."
+          },
+          {
+            question: "What is 25% of 80?",
+            options: ["15", "20", "25", "30"],
+            correct: 1,
+            solution: "The correct answer is 20. To find 25% of a number, multiply it by 0.25: 80 × 0.25 = 20."
+          },
+          {
+            question: "What is the value of 3! (3 factorial)?",
+            options: ["3", "6", "9", "12"],
+            correct: 1,
+            solution: "The correct answer is 6. Factorial means multiplying a number by all positive integers less than it: 3! = 3 × 2 × 1 = 6."
+          },
+          {
+            question: "What is the next number in the sequence: 2, 4, 8, 16, ...?",
+            options: ["24", "28", "32", "36"],
+            correct: 2,
+            solution: "The correct answer is 32. This is a geometric sequence where each number is multiplied by 2: 2 × 2 = 4, 4 × 2 = 8, 8 × 2 = 16, 16 × 2 = 32."
+          }
+        ],
+        hard: [
+          {
+            question: "What is the value of π (pi) to two decimal places?",
+            options: ["3.12", "3.14", "3.16", "3.18"],
+            correct: 1,
+            solution: "The correct answer is 3.14. Pi (π) is a mathematical constant representing the ratio of a circle's circumference to its diameter. Its value is approximately 3.14159, which rounds to 3.14 to two decimal places."
+          },
+          {
+            question: "What is the derivative of x²?",
+            options: ["x", "2x", "x²", "2x²"],
+            correct: 1,
+            solution: "The correct answer is 2x. The derivative of x² is found by bringing down the exponent and subtracting 1 from it: d/dx(x²) = 2x."
+          },
+          {
+            question: "What is the value of sin(π/2)?",
+            options: ["0", "0.5", "1", "2"],
+            correct: 2,
+            solution: "The correct answer is 1. The sine of π/2 radians (90 degrees) is 1, as it represents the maximum value of the sine function."
+          },
+          {
+            question: "What is the sum of the first 10 natural numbers?",
+            options: ["45", "50", "55", "60"],
+            correct: 2,
+            solution: "The correct answer is 55. The sum of the first n natural numbers is given by the formula n(n+1)/2. For n=10: 10×11/2 = 55."
+          },
+          {
+            question: "What is the value of log₁₀(100)?",
+            options: ["1", "2", "3", "4"],
+            correct: 1,
+            solution: "The correct answer is 2. The logarithm log₁₀(100) asks '10 raised to what power equals 100?' Since 10² = 100, the answer is 2."
+          }
+        ]
+      },
+      english: {
+        easy: [
+          {
+            question: "Which word is a noun?",
+            options: ["run", "beautiful", "book", "quickly"],
+            correct: 2,
+            solution: "The correct answer is 'book'. A noun is a word that names a person, place, thing, or idea. 'Book' is a thing, while 'run' is a verb, 'beautiful' is an adjective, and 'quickly' is an adverb."
+          },
+          {
+            question: "What is the past tense of 'go'?",
+            options: ["gone", "went", "going", "goes"],
+            correct: 1,
+            solution: "The correct answer is 'went'. 'Went' is the simple past tense of 'go'. 'Gone' is the past participle, used with helping verbs like 'have'."
+          },
+          {
+            question: "Which sentence is correct?",
+            options: [
+              "She don't like apples",
+              "She doesn't likes apples",
+              "She doesn't like apples",
+              "She don't likes apples"
+            ],
+            correct: 2,
+            solution: "The correct answer is 'She doesn't like apples'. The third person singular (she) requires 'doesn't' and the base form of the verb 'like'."
+          },
+          {
+            question: "What is the plural of 'child'?",
+            options: ["childs", "children", "childes", "child"],
+            correct: 1,
+            solution: "The correct answer is 'children'. 'Children' is an irregular plural form. Most nouns form their plural by adding -s, but some have irregular forms."
+          },
+          {
+            question: "Which word is an adjective?",
+            options: ["happiness", "happy", "happily", "happen"],
+            correct: 1,
+            solution: "The correct answer is 'happy'. An adjective describes a noun. 'Happy' describes how someone feels, while 'happiness' is a noun, 'happily' is an adverb, and 'happen' is a verb."
+          }
+        ],
+        medium: [
+          {
+            question: "Identify the preposition in the sentence: 'The cat is under the table.'",
+            options: ["cat", "is", "under", "table"],
+            correct: 2,
+            solution: "The correct answer is 'under'. A preposition shows the relationship between a noun (or pronoun) and other words in a sentence. In this case, 'under' shows the relationship between 'cat' and 'table'."
+          },
+          {
+            question: "What is the antonym of 'benevolent'?",
+            options: ["kind", "generous", "malevolent", "friendly"],
+            correct: 2,
+            solution: "The correct answer is 'malevolent'. 'Benevolent' means kind and generous, while 'malevolent' means having or showing a wish to do evil to others."
+          },
+          {
+            question: "Which sentence uses the correct tense?",
+            options: [
+              "I have been working here since 5 years",
+              "I have been working here for 5 years",
+              "I am working here since 5 years",
+              "I work here since 5 years"
+            ],
+            correct: 1,
+            solution: "The correct answer is 'I have been working here for 5 years'. 'For' is used with periods of time, while 'since' is used with specific points in time."
+          },
+          {
+            question: "What is the plural of 'criterion'?",
+            options: ["criterions", "criterias", "criteria", "criterion"],
+            correct: 2,
+            solution: "The correct answer is 'criteria'. 'Criteria' is the plural form of 'criterion', which comes from Greek. Many Greek-derived words have irregular plural forms."
+          },
+          {
+            question: "Which literary device is used in 'The wind whispered through the trees'?",
+            options: ["simile", "metaphor", "personification", "hyperbole"],
+            correct: 2,
+            solution: "The correct answer is 'personification'. Personification gives human characteristics to non-human things. Here, the wind is given the human ability to whisper."
+          }
+        ],
+        hard: [
+          {
+            question: "Which sentence is in the passive voice?",
+            options: [
+              "The dog chased the cat.",
+              "The cat was chased by the dog.",
+              "The dog and cat played together.",
+              "The cat ran away from the dog."
+            ],
+            correct: 1,
+            solution: "The correct answer is 'The cat was chased by the dog.' This is in passive voice because the subject (cat) receives the action. In passive voice, the object of the active sentence becomes the subject, and the subject becomes part of a prepositional phrase with 'by'."
+          },
+          {
+            question: "Which word is an example of an oxymoron?",
+            options: ["beautiful sunset", "bitter sweet", "happy child", "running fast"],
+            correct: 1,
+            solution: "The correct answer is 'bitter sweet'. An oxymoron is a figure of speech that combines contradictory terms. 'Bitter' and 'sweet' are opposites that create a new meaning when combined."
+          },
+          {
+            question: "What is the correct passive voice of 'They are building a new bridge'?",
+            options: [
+              "A new bridge is being built by them",
+              "A new bridge was being built by them",
+              "A new bridge has been built by them",
+              "A new bridge will be built by them"
+            ],
+            correct: 0,
+            solution: "The correct answer is 'A new bridge is being built by them'. This maintains the present continuous tense of the original sentence while converting it to passive voice."
+          },
+          {
+            question: "Which sentence contains a dangling modifier?",
+            options: [
+              "Running quickly, the finish line was crossed",
+              "Running quickly, I crossed the finish line",
+              "I crossed the finish line running quickly",
+              "The finish line was crossed running quickly"
+            ],
+            correct: 0,
+            solution: "The correct answer is 'Running quickly, the finish line was crossed'. This contains a dangling modifier because 'running quickly' doesn't logically modify 'the finish line'."
+          },
+          {
+            question: "What is the correct form of the subjunctive mood?",
+            options: [
+              "If I was you, I would study more",
+              "If I were you, I would study more",
+              "If I am you, I would study more",
+              "If I be you, I would study more"
+            ],
+            correct: 1,
+            solution: "The correct answer is 'If I were you, I would study more'. The subjunctive mood uses 'were' instead of 'was' for hypothetical situations, even with singular subjects."
+          }
+        ]
+      },
+      science: {
+        easy: [
+          {
+            question: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2", "H2"],
+            correct: 0,
+            solution: "The correct answer is H2O. Water is a compound made up of two hydrogen atoms and one oxygen atom. The chemical formula H2O represents this composition, where H stands for hydrogen and O stands for oxygen."
+          },
+          {
+            question: "Which planet is known as the Red Planet?",
+            options: ["Venus", "Mars", "Jupiter", "Saturn"],
+            correct: 1,
+            solution: "The correct answer is Mars. Mars is called the Red Planet because of its reddish appearance, which is due to iron oxide (rust) on its surface. This gives Mars its distinctive red color when viewed from Earth."
+          },
+          {
+            question: "What is the largest organ in the human body?",
+            options: ["heart", "brain", "skin", "liver"],
+            correct: 2,
+            solution: "The correct answer is skin. The skin is the body's largest organ, covering the entire body and serving as a protective barrier against the external environment."
+          },
+          {
+            question: "What is the process by which plants make their food?",
+            options: ["respiration", "photosynthesis", "transpiration", "digestion"],
+            correct: 1,
+            solution: "The correct answer is photosynthesis. This is the process by which plants convert sunlight, carbon dioxide, and water into glucose (food) and oxygen."
+          },
+          {
+            question: "What is the unit of electrical resistance?",
+            options: ["volt", "ampere", "ohm", "watt"],
+            correct: 2,
+            solution: "The correct answer is ohm. The ohm (Ω) is the SI unit of electrical resistance, named after German physicist Georg Ohm."
+          }
+        ],
+        medium: [
+          {
+            question: "Which gas is most abundant in Earth's atmosphere?",
+            options: ["oxygen", "carbon dioxide", "nitrogen", "hydrogen"],
+            correct: 2,
+            solution: "The correct answer is nitrogen. Nitrogen makes up about 78% of Earth's atmosphere, while oxygen makes up about 21%, and other gases make up the remaining 1%."
+          },
+          {
+            question: "What is the speed of light in a vacuum?",
+            options: [
+              "300,000 km/s",
+              "299,792 km/s",
+              "300,000 m/s",
+              "299,792 m/s"
+            ],
+            correct: 1,
+            solution: "The correct answer is 299,792 km/s. This is the exact speed of light in a vacuum, which is a fundamental constant of nature and the maximum speed at which all energy, matter, and information can travel."
+          },
+          {
+            question: "What is the chemical formula for glucose?",
+            options: ["C6H12O6", "C6H6O6", "C12H22O11", "CH4"],
+            correct: 0,
+            solution: "The correct answer is C6H12O6. Glucose is a simple sugar with 6 carbon atoms, 12 hydrogen atoms, and 6 oxygen atoms. It's the primary source of energy for living organisms."
+          },
+          {
+            question: "Which subatomic particle has a negative charge?",
+            options: ["proton", "neutron", "electron", "positron"],
+            correct: 2,
+            solution: "The correct answer is electron. Electrons are negatively charged subatomic particles that orbit the nucleus of an atom. Protons are positively charged, and neutrons have no charge."
+          },
+          {
+            question: "What is the pH of pure water?",
+            options: ["5", "6", "7", "8"],
+            correct: 2,
+            solution: "The correct answer is 7. Pure water is neutral, with a pH of 7. The pH scale ranges from 0 to 14, with 7 being neutral, values below 7 being acidic, and values above 7 being basic."
+          }
+        ],
+        hard: [
+          {
+            question: "What is the process by which plants make their own food?",
+            options: ["respiration", "photosynthesis", "transpiration", "germination"],
+            correct: 1,
+            solution: "The correct answer is Photosynthesis. This is the process by which plants convert sunlight, carbon dioxide, and water into glucose (food) and oxygen. The chemical equation for photosynthesis is: 6CO2 + 6H2O + light energy → C6H12O6 + 6O2."
+          },
+          {
+            question: "What is the first law of thermodynamics?",
+            options: [
+              "Energy cannot be created or destroyed",
+              "Entropy always increases",
+              "Absolute zero cannot be reached",
+              "Energy flows from hot to cold"
+            ],
+            correct: 0,
+            solution: "The correct answer is 'Energy cannot be created or destroyed'. This is the law of conservation of energy, stating that energy can only be transformed from one form to another, but the total amount of energy in a closed system remains constant."
+          },
+          {
+            question: "What is the Heisenberg Uncertainty Principle?",
+            options: [
+              "You can't measure position and momentum simultaneously",
+              "Energy is quantized",
+              "Light behaves as both particle and wave",
+              "Time is relative"
+            ],
+            correct: 0,
+            solution: "The correct answer is 'You can't measure position and momentum simultaneously'. The Heisenberg Uncertainty Principle states that the more precisely you know a particle's position, the less precisely you can know its momentum, and vice versa."
+          },
+          {
+            question: "What is the function of the Golgi apparatus?",
+            options: [
+              "Protein synthesis",
+              "Energy production",
+              "Protein modification and packaging",
+              "Waste disposal"
+            ],
+            correct: 2,
+            solution: "The correct answer is 'Protein modification and packaging'. The Golgi apparatus modifies, sorts, and packages proteins and lipids for transport to their final destinations within or outside the cell."
+          },
+          {
+            question: "What is the difference between an acid and a base?",
+            options: [
+              "Acids donate protons, bases accept protons",
+              "Acids accept protons, bases donate protons",
+              "Acids are always liquid, bases are always solid",
+              "Acids are always dangerous, bases are always safe"
+            ],
+            correct: 0,
+            solution: "The correct answer is 'Acids donate protons, bases accept protons'. This is the Brønsted-Lowry definition of acids and bases. Acids are proton donors, while bases are proton acceptors."
+          }
+        ]
+      }
+    };
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedOption = null;
+    const questions = quizData[subject][difficulty];
+
+    function displayQuestion() {
+      const question = questions[currentQuestion];
+      document.getElementById('question').textContent = question.question;
+      
+      const optionsContainer = document.getElementById('options');
+      optionsContainer.innerHTML = '';
+      
+      question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        optionElement.textContent = option;
+        optionElement.addEventListener('click', () => selectOption(index));
+        optionsContainer.appendChild(optionElement);
+      });
+
+      document.getElementById('solutionContainer').style.display = 'none';
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('progressBar').style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+      document.getElementById('progressCounter').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+    }
+
+    function selectOption(index) {
+      if (selectedOption !== null) return;
+      
+      selectedOption = index;
+      const options = document.querySelectorAll('.option');
+      const correctIndex = questions[currentQuestion].correct;
+      
+      options.forEach((option, i) => {
+        if (i === correctIndex) {
+          option.classList.add('correct');
+        } else if (i === index && i !== correctIndex) {
+          option.classList.add('incorrect');
+        }
+        option.classList.add('selected');
+      });
+
+      if (index === correctIndex) {
+        score++;
+        createConfetti();
+        showFeedbackMessage('Great Job! 🎉', true);
+      } else {
+        showFeedbackMessage('Oops! Try Again! 😢', false);
+      }
+
+      // Show solution and next button
+      document.getElementById('solutionText').textContent = questions[currentQuestion].solution;
+      document.getElementById('solutionContainer').style.display = 'block';
+      document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      selectedOption = null;
+      
+      if (currentQuestion < questions.length) {
+        displayQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('resultContainer').style.display = 'block';
+      const finalScore = Math.round((score / questions.length) * 100);
+      document.getElementById('score').textContent = `${finalScore}%`;
+
+      // Update stats in localStorage
+      const stats = JSON.parse(localStorage.getItem(`${subject}Stats`) || '{"quizzesTaken":0,"totalScore":0}');
+      stats.quizzesTaken++;
+      stats.totalScore += finalScore;
+      localStorage.setItem(`${subject}Stats`, JSON.stringify(stats));
+
+      // Add improvement suggestions based on score
+      let suggestions = [];
+      if (finalScore >= 90) {
+        suggestions = [
+          "Great job! Keep challenging yourself with more difficult questions.",
+          "Try teaching these concepts to others to reinforce your understanding.",
+          "Explore advanced topics in this subject area.",
+          "Create your own quiz questions to test your knowledge."
+        ];
+      } else if (finalScore >= 75) {
+        suggestions = [
+          "Review the questions you missed to understand your mistakes.",
+          "Practice similar questions to strengthen your understanding.",
+          "Take notes on key concepts you find challenging.",
+          "Try the quiz again after reviewing the material."
+        ];
+      } else if (finalScore >= 60) {
+        suggestions = [
+          "Review the basic concepts before attempting more advanced questions.",
+          "Create flashcards for important terms and formulas.",
+          "Watch educational videos on topics you find difficult.",
+          "Practice with easier questions first, then gradually increase difficulty."
+        ];
+      } else {
+        suggestions = [
+          "Start with the basic concepts and build your foundation.",
+          "Review the learning materials before attempting the quiz again.",
+          "Break down complex topics into smaller, manageable parts.",
+          "Ask for help from teachers or peers when needed."
+        ];
+      }
+
+      // Add suggestions to the result container
+      const suggestionsHTML = `
+        <div class="improvement-suggestions">
+          <h3 class="suggestions-title">Improvement Suggestions</h3>
+          <ul class="suggestions-list">
+            ${suggestions.map(suggestion => `<li class="suggestion-item">${suggestion}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+
+      document.getElementById('resultContainer').insertAdjacentHTML('beforeend', suggestionsHTML);
+    }
+
+    // Event listeners
+    document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+    
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      currentQuestion = 0;
+      score = 0;
+      selectedOption = null;
+      document.getElementById('quizContent').style.display = 'block';
+      document.getElementById('resultContainer').style.display = 'none';
+      displayQuestion();
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      window.location.href = 'subject.html?subject=' + subject;
+    });
+
+    // Add confetti function
+    function createConfetti() {
+      const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+
+    // Add feedback message function
+    function showFeedbackMessage(message, isSuccess) {
+      const feedback = document.createElement('div');
+      feedback.className = `feedback-message ${isSuccess ? 'success-message' : 'error-message'}`;
+      feedback.textContent = message;
+      document.body.appendChild(feedback);
+      setTimeout(() => {
+        feedback.style.animation = 'fadeOut 0.5s forwards';
+        setTimeout(() => feedback.remove(), 500);
+      }, 1500);
+    }
+
+    // Start the quiz
+    displayQuestion();
+  </script>
+</body>
+</html> 

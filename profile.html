@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EduSphere Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      margin: 0;
+      padding: 0;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .profile-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-name {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+
+    .profile-role {
+      color: #666;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0.5rem 0;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .profile-section {
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #6e8efb;
+      box-shadow: 0 0 0 3px rgba(110, 142, 251, 0.2);
+    }
+
+    .save-btn {
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: #fff;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(110, 142, 251, 0.4);
+    }
+
+    .achievement-badges {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .badge-item {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .badge-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .badge-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #6e8efb;
+    }
+
+    .badge-title {
+      font-size: 1rem;
+      color: #2c3e50;
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+
+    .badge-date {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">← Back</button>
+    <span>Profile</span>
+  </header>
+
+  <div class="container">
+    <div class="profile-container">
+      <div class="profile-header">
+        <div class="profile-avatar">A</div>
+        <h1 class="profile-name">Akshay</h1>
+        <p class="profile-role">Student</p>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-card">
+          <div class="stat-value">85%</div>
+          <div class="stat-label">Average Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">15</div>
+          <div class="stat-label">Quizzes Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">5</div>
+          <div class="stat-label">Achievements</div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h2 class="section-title">Personal Information</h2>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" value="Akshay" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" value="akshay@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="roll">Roll Number</label>
+          <input type="text" id="roll" value="15" />
+        </div>
+        <button class="save-btn">Save Changes</button>
+      </div>
+
+      <div class="profile-section">
+        <h2 class="section-title">Recent Achievements</h2>
+        <div class="achievement-badges">
+          <div class="badge-item">
+            <div class="badge-icon">🏆</div>
+            <div class="badge-title">Math Master</div>
+            <div class="badge-date">Earned 2 days ago</div>
+          </div>
+          <div class="badge-item">
+            <div class="badge-icon">⭐</div>
+            <div class="badge-title">Quick Learner</div>
+            <div class="badge-date">Earned 5 days ago</div>
+          </div>
+          <div class="badge-item">
+            <div class="badge-icon">🎯</div>
+            <div class="badge-title">Perfect Score</div>
+            <div class="badge-date">Earned 1 week ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check authentication
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = 'login.html';
+    }
+
+    // Load user data
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (userData.name) {
+      document.getElementById('name').value = userData.name;
+      document.querySelector('.profile-name').textContent = userData.name;
+      document.querySelector('.profile-avatar').textContent = userData.name[0];
+    }
+
+    // Calculate overall average score across all subjects
+    const subjects = ['math', 'english', 'science'];
+    let totalQuizzes = 0;
+    let totalScore = 0;
+
+    subjects.forEach(subject => {
+      const stats = JSON.parse(localStorage.getItem(`${subject}Stats`) || '{"quizzesTaken":0,"totalScore":0}');
+      totalQuizzes += stats.quizzesTaken;
+      totalScore += stats.totalScore;
+    });
+
+    const overallAverage = totalQuizzes > 0 ? Math.round(totalScore / totalQuizzes) : 0;
+    document.querySelector('.stat-value').textContent = `${overallAverage}%`;
+
+    // Save changes
+    document.querySelector('.save-btn').addEventListener('click', function() {
+      const updatedData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        roll: document.getElementById('roll').value
+      };
+      localStorage.setItem('userData', JSON.stringify(updatedData));
+      alert('Profile updated successfully!');
+    });
+  </script>
+</body>
+</html> 

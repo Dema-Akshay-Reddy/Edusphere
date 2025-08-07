@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EduSphere Subject</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      margin: 0;
+      padding: 0;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .subject-overview {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subject-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .subject-icon {
+      font-size: 3rem;
+      margin-right: 1rem;
+      color: #6e8efb;
+    }
+
+    .subject-title {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .progress-container {
+      margin: 2rem 0;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress {
+      height: 100%;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0.5rem 0;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .difficulty-section {
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .difficulty-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .difficulty-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .difficulty-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .difficulty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #6e8efb;
+    }
+
+    .difficulty-title {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+
+    .difficulty-desc {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+      line-height: 1.4;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(110, 142, 251, 0.4);
+    }
+
+    .recent-activity {
+      margin-top: 2rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .activity-list {
+      margin-top: 1rem;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .activity-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .activity-icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      color: #6e8efb;
+    }
+
+    .activity-details {
+      flex-grow: 1;
+    }
+
+    .activity-title {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .activity-meta {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    .activity-score {
+      font-weight: 600;
+      color: #4caf50;
+    }
+
+    .theory-section {
+      margin-top: 2rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .theory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .theory-card {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+
+    .theory-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .theory-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #6e8efb;
+    }
+
+    .theory-title {
+      font-size: 1.2rem;
+      color: #2c3e50;
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+
+    .theory-desc {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">← Back</button>
+    <span id="subjectTitle">Subject</span>
+  </header>
+
+  <div class="container">
+    <div class="subject-overview">
+      <div class="subject-header">
+        <div class="subject-icon" id="subjectIcon">📚</div>
+        <h1 class="subject-title" id="subjectName">Subject</h1>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="progress-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="averageScore">0%</div>
+          <div class="stat-label">Average Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="quizzesTaken">0</div>
+          <div class="stat-label">Quizzes Taken</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="difficulty-section">
+      <h2 class="section-title">Choose Difficulty</h2>
+      <div class="difficulty-grid">
+        <div class="difficulty-card" onclick="startQuiz('easy')">
+          <div class="difficulty-icon">🌟</div>
+          <h3 class="difficulty-title">Easy</h3>
+          <p class="difficulty-desc">Perfect for beginners. Basic concepts and straightforward questions.</p>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+        <div class="difficulty-card" onclick="startQuiz('medium')">
+          <div class="difficulty-icon">🎯</div>
+          <h3 class="difficulty-title">Medium</h3>
+          <p class="difficulty-desc">For intermediate learners. More complex problems and scenarios.</p>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+        <div class="difficulty-card" onclick="startQuiz('hard')">
+          <div class="difficulty-icon">🏆</div>
+          <h3 class="difficulty-title">Hard</h3>
+          <p class="difficulty-desc">Challenge yourself with advanced concepts and tricky questions.</p>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="theory-section">
+      <h2 class="section-title">Learning Modules</h2>
+      <div class="theory-grid" id="theoryGrid">
+        <!-- Theory cards will be added here dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check authentication
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = 'login.html';
+    }
+
+    // Get subject from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const subject = urlParams.get('subject');
+
+    if (!subject) {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Subject icons and titles
+    const subjectData = {
+      math: {
+        icon: '📐',
+        title: 'Mathematics'
+      },
+      english: {
+        icon: '📚',
+        title: 'English'
+      },
+      science: {
+        icon: '🔬',
+        title: 'Science'
+      }
+    };
+
+    // Update subject information
+    document.getElementById('subjectIcon').textContent = subjectData[subject].icon;
+    document.getElementById('subjectName').textContent = subjectData[subject].title;
+    document.getElementById('subjectTitle').textContent = subjectData[subject].title;
+
+    // Load subject stats
+    const stats = JSON.parse(localStorage.getItem(`${subject}Stats`) || '{"quizzesTaken":0,"totalScore":0}');
+    const averageScore = stats.quizzesTaken > 0 ? Math.round(stats.totalScore / stats.quizzesTaken) : 0;
+    
+    document.getElementById('averageScore').textContent = `${averageScore}%`;
+    document.getElementById('quizzesTaken').textContent = stats.quizzesTaken;
+    document.getElementById('progressBar').style.width = `${averageScore}%`;
+
+    // Theory modules data
+    const theoryModules = {
+      math: [
+        {
+          title: "Basic Arithmetic",
+          description: "Learn addition, subtraction, multiplication, and division",
+          icon: "➕"
+        },
+        {
+          title: "Algebra Fundamentals",
+          description: "Introduction to variables, equations, and expressions",
+          icon: "📊"
+        },
+        {
+          title: "Geometry Basics",
+          description: "Understanding shapes, angles, and measurements",
+          icon: "📐"
+        }
+      ],
+      english: [
+        {
+          title: "Grammar Essentials",
+          description: "Master the rules of English grammar",
+          icon: "📝"
+        },
+        {
+          title: "Vocabulary Building",
+          description: "Expand your word knowledge and usage",
+          icon: "📚"
+        },
+        {
+          title: "Reading Comprehension",
+          description: "Improve your understanding of written texts",
+          icon: "📖"
+        }
+      ],
+      science: [
+        {
+          title: "Physics Basics",
+          description: "Introduction to motion, forces, and energy",
+          icon: "⚛️"
+        },
+        {
+          title: "Chemistry Fundamentals",
+          description: "Learn about elements, compounds, and reactions",
+          icon: "🧪"
+        },
+        {
+          title: "Biology Essentials",
+          description: "Understanding living organisms and their processes",
+          icon: "🔬"
+        }
+      ]
+    };
+
+    // Add theory modules
+    const theoryGrid = document.getElementById('theoryGrid');
+    theoryModules[subject].forEach(module => {
+      const theoryCard = document.createElement('div');
+      theoryCard.className = 'theory-card';
+      theoryCard.onclick = () => window.location.href = `theory.html?subject=${subject}&module=${module.title.toLowerCase().replace(/\s+/g, '-')}`;
+      theoryCard.innerHTML = `
+        <div class="theory-icon">${module.icon}</div>
+        <h3 class="theory-title">${module.title}</h3>
+        <p class="theory-desc">${module.description}</p>
+      `;
+      theoryGrid.appendChild(theoryCard);
+    });
+
+    // Function to start quiz
+    function startQuiz(difficulty) {
+      window.location.href = `quiz.html?subject=${subject}&difficulty=${difficulty}`;
+    }
+  </script>
+</body>
+</html> 

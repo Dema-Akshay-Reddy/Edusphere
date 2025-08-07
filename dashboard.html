@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EduSphere Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" defer crossorigin data-id="ca0a3dea-544a-4d95-909f-f8d9942a4cc3" data-name="MantaAssistant" src="https://manta.barnaclestudios.com/scripts/site/widget.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      margin: 0;
+      pa
+      dding: 0;
+      color: #222;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .overall-progress {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .progress-chart-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    .progress-stats {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .progress-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin: 0 0 1.5rem 0;
+      text-align: center;
+      font-weight: 600;
+    }
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .progress-card {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .progress-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .progress-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #6e8efb;
+    }
+    .progress-value {
+      font-size: 2.2rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0.5rem 0;
+    }
+    .progress-label {
+      color: #666;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .achievements {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+    .achievements-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin: 0 0 1.5rem 0;
+      text-align: center;
+      font-weight: 600;
+    }
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .achievement-card {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .achievement-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .achievement-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #6e8efb;
+    }
+    .achievement-title {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin: 0 0 0.5rem 0;
+      font-weight: 600;
+    }
+    .achievement-desc {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.4;
+    }
+    .subjects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .subject-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .subject-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    .subject-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #6e8efb;
+    }
+    .subject-title {
+      font-size: 1.8rem;
+      color: #2c3e50;
+      margin: 0;
+      font-weight: 600;
+    }
+    .subject-progress {
+      margin-top: 1rem;
+      height: 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .subject-progress-bar {
+      height: 100%;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .header-buttons {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+    .profile-btn, .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    .profile-btn:hover, .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .logout-btn {
+      background: rgba(211, 47, 47, 0.8);
+    }
+    .logout-btn:hover {
+      background: rgba(183, 28, 28, 0.9);
+    }
+    .leaderboard-section {
+      margin-top: 3rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+    .leaderboard-title {
+      color: #2c3e50;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .leaderboard-table th {
+      background: #f8f9fa;
+      padding: 1rem;
+      text-align: left;
+      color: #666;
+      font-weight: 600;
+    }
+    .leaderboard-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      color: #2c3e50;
+    }
+    .leaderboard-table tr:hover {
+      background: #f8f9fa;
+    }
+    .rank {
+      font-weight: bold;
+      color: #6e8efb;
+    }
+    .score {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .badge-gold {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #fff;
+    }
+    .badge-silver {
+      background: linear-gradient(135deg, #C0C0C0, #A9A9A9);
+      color: #fff;
+    }
+    .badge-bronze {
+      background: linear-gradient(135deg, #CD7F32, #8B4513);
+      color: #fff;
+    }
+    .badge-expert {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: #fff;
+    }
+    .badge-master {
+      background: linear-gradient(135deg, #9C27B0, #6A1B9A);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EduSphere Dashboard</h1>
+    <div class="header-buttons">
+      <button class="profile-btn" id="profileBtn">Profile</button>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+  <div class="container">
+    <div class="overall-progress">
+      <div class="progress-chart-container">
+        <canvas id="subjectProgressChart"></canvas>
+      </div>
+      <div class="progress-stats">
+        <h2 class="progress-title">Your Overall Progress</h2>
+        <div class="progress-grid">
+          <div class="progress-card">
+            <div class="progress-icon">📚</div>
+            <div class="progress-value" id="totalQuizzes">0</div>
+            <div class="progress-label">Quizzes Completed</div>
+          </div>
+          <div class="progress-card">
+            <div class="progress-icon">🎯</div>
+            <div class="progress-value" id="averageScore">0%</div>
+            <div class="progress-label">Average Score</div>
+          </div>
+          <div class="progress-card">
+            <div class="progress-icon">⏱️</div>
+            <div class="progress-value" id="studyTime">0h</div>
+            <div class="progress-label">Study Time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="achievements">
+      <h2 class="achievements-title">Recent Achievements</h2>
+      <div class="achievements-grid">
+        <div class="achievement-card">
+          <div class="achievement-icon">🏆</div>
+          <h3 class="achievement-title">Quick Learner</h3>
+          <p class="achievement-desc">Completed 5 quizzes in one day</p>
+        </div>
+        <div class="achievement-card">
+          <div class="achievement-icon">🌟</div>
+          <h3 class="achievement-title">Subject Master</h3>
+          <p class="achievement-desc">Scored above 90% in Mathematics</p>
+        </div>
+        <div class="achievement-card">
+          <div class="achievement-icon">📈</div>
+          <h3 class="achievement-title">Progress Champion</h3>
+          <p class="achievement-desc">Improved score by 20% this week</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="subjects" id="subjectsGrid">
+      <div class="subject-card" data-subject="math">
+        <div class="subject-icon">📐</div>
+        <h2 class="subject-title">Mathematics</h2>
+        <div class="subject-progress">
+          <div class="subject-progress-bar" id="mathProgress"></div>
+        </div>
+      </div>
+      <div class="subject-card" data-subject="english">
+        <div class="subject-icon">📚</div>
+        <h2 class="subject-title">English</h2>
+        <div class="subject-progress">
+          <div class="subject-progress-bar" id="englishProgress"></div>
+        </div>
+      </div>
+      <div class="subject-card" data-subject="science">
+        <div class="subject-icon">🔬</div>
+        <h2 class="subject-title">Science</h2>
+        <div class="subject-progress">
+          <div class="subject-progress-bar" id="scienceProgress"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="leaderboard-section">
+    <h2 class="leaderboard-title">Leaderboard</h2>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Roll No</th>
+          <th>Math</th>
+          <th>English</th>
+          <th>Science</th>
+          <th>Overall</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Check authentication
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = 'login.html';
+    }
+
+    // Get user data
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+    // Calculate overall progress
+    function updateOverallProgress() {
+      const subjects = ['math', 'english', 'science'];
+      let totalQuizzes = 0;
+      let totalScore = 0;
+      let quizzesCount = 0;
+      const subjectScores = [];
+
+      subjects.forEach(subject => {
+        const stats = JSON.parse(localStorage.getItem(`${subject}Stats`) || '{"quizzesTaken":0,"totalScore":0}');
+        totalQuizzes += stats.quizzesTaken;
+        totalScore += stats.totalScore;
+        quizzesCount += stats.quizzesTaken > 0 ? 1 : 0;
+        
+        const averageScore = stats.quizzesTaken > 0 
+          ? Math.round(stats.totalScore / stats.quizzesTaken) 
+          : 0;
+        subjectScores.push(averageScore);
+      });
+
+      // Update total quizzes
+      document.getElementById('totalQuizzes').textContent = totalQuizzes;
+
+      // Update average score - calculate average of subject averages
+      const averageScore = quizzesCount > 0 
+        ? Math.round(subjectScores.reduce((sum, score) => sum + score, 0) / quizzesCount) 
+        : 0;
+      document.getElementById('averageScore').textContent = `${averageScore}%`;
+
+      // Update study time (example: 1 hour per 3 quizzes)
+      const studyHours = Math.floor(totalQuizzes / 3);
+      document.getElementById('studyTime').textContent = `${studyHours}h`;
+
+      // Create subject progress pie chart
+      const ctx = document.getElementById('subjectProgressChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Mathematics', 'English', 'Science'],
+          datasets: [{
+            data: subjectScores,
+            backgroundColor: [
+              '#3f51b5', // Math - Blue
+              '#4caf50', // English - Green
+              '#ff9800'  // Science - Orange
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '70%',
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                font: {
+                  size: 12
+                }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Update subject progress bars
+      subjects.forEach(subject => {
+        const stats = JSON.parse(localStorage.getItem(`${subject}Stats`) || '{"quizzesTaken":0,"totalScore":0}');
+        const progress = stats.quizzesTaken > 0 
+          ? Math.round((stats.totalScore / stats.quizzesTaken)) 
+          : 0;
+        document.getElementById(`${subject}Progress`).style.width = `${progress}%`;
+      });
+    }
+
+    // Event listeners
+    document.querySelectorAll('.subject-card').forEach(card => {
+      card.addEventListener('click', () => {
+        window.location.href = `subject.html?subject=${card.dataset.subject}`;
+      });
+    });
+
+    document.getElementById('profileBtn').addEventListener('click', function() {
+      window.location.href = 'profile.html';
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'login.html';
+    });
+
+    // Initial update
+    updateOverallProgress();
+
+    // Leaderboard data
+    const leaderboardData = [
+      {
+        name: "Charan",
+        rollNumber: "23",
+        math: {
+          quizzesTaken: 5,
+          averageScore: 85
+        },
+        english: {
+          quizzesTaken: 4,
+          averageScore: 78
+        },
+        science: {
+          quizzesTaken: 6,
+          averageScore: 82
+        }
+      },
+      {
+        name: "Akshay",
+        rollNumber: "15",
+        math: {
+          quizzesTaken: JSON.parse(localStorage.getItem('mathStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken,
+          averageScore: JSON.parse(localStorage.getItem('mathStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken > 0 
+            ? Math.round(JSON.parse(localStorage.getItem('mathStats') || '{"quizzesTaken":0,"totalScore":0}').totalScore / 
+                        JSON.parse(localStorage.getItem('mathStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken)
+            : 0
+        },
+        english: {
+          quizzesTaken: JSON.parse(localStorage.getItem('englishStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken,
+          averageScore: JSON.parse(localStorage.getItem('englishStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken > 0 
+            ? Math.round(JSON.parse(localStorage.getItem('englishStats') || '{"quizzesTaken":0,"totalScore":0}').totalScore / 
+                        JSON.parse(localStorage.getItem('englishStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken)
+            : 0
+        },
+        science: {
+          quizzesTaken: JSON.parse(localStorage.getItem('scienceStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken,
+          averageScore: JSON.parse(localStorage.getItem('scienceStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken > 0 
+            ? Math.round(JSON.parse(localStorage.getItem('scienceStats') || '{"quizzesTaken":0,"totalScore":0}').totalScore / 
+                        JSON.parse(localStorage.getItem('scienceStats') || '{"quizzesTaken":0,"totalScore":0}').quizzesTaken)
+            : 0
+        }
+      },
+      {
+        name: "Kushal",
+        rollNumber: "8",
+        math: {
+          quizzesTaken: 6,
+          averageScore: 75
+        },
+        english: {
+          quizzesTaken: 5,
+          averageScore: 82
+        },
+        science: {
+          quizzesTaken: 4,
+          averageScore: 78
+        }
+      },
+      {
+        name: "Krishna",
+        rollNumber: "19",
+        math: {
+          quizzesTaken: 3,
+          averageScore: 88
+        },
+        english: {
+          quizzesTaken: 4,
+          averageScore: 85
+        },
+        science: {
+          quizzesTaken: 5,
+          averageScore: 90
+        }
+      },
+      {
+        name: "Ram",
+        rollNumber: "12",
+        math: {
+          quizzesTaken: 5,
+          averageScore: 80
+        },
+        english: {
+          quizzesTaken: 6,
+          averageScore: 75
+        },
+        science: {
+          quizzesTaken: 4,
+          averageScore: 82
+        }
+      }
+    ];
+
+    // Function to update leaderboard
+    function updateLeaderboard() {
+      const leaderboardBody = document.getElementById('leaderboardBody');
+      leaderboardBody.innerHTML = '';
+
+      // Calculate overall scores and sort
+      const sortedData = leaderboardData.map(student => {
+        const overallScore = (student.math.averageScore + student.english.averageScore + student.science.averageScore) / 3;
+        return { ...student, overallScore };
+      }).sort((a, b) => b.overallScore - a.overallScore);
+
+      // Add rows to table
+      sortedData.forEach((student, index) => {
+        const row = document.createElement('tr');
+        
+        // Determine badges
+        let badges = [];
+        if (index === 0) badges.push('<span class="badge badge-gold">🥇 Top Rank</span>');
+        if (index === 1) badges.push('<span class="badge badge-silver">🥈 Second Rank</span>');
+        if (index === 2) badges.push('<span class="badge badge-bronze">🥉 Third Rank</span>');
+        
+        // Subject mastery badges
+        if (student.math.averageScore >= 90) badges.push('<span class="badge badge-master">Math Master</span>');
+        if (student.english.averageScore >= 90) badges.push('<span class="badge badge-master">English Master</span>');
+        if (student.science.averageScore >= 90) badges.push('<span class="badge badge-master">Science Master</span>');
+        
+        // Overall performance badges
+        if (student.overallScore >= 90) badges.push('<span class="badge badge-expert">Overall Expert</span>');
+        else if (student.overallScore >= 80) badges.push('<span class="badge badge-expert">High Achiever</span>');
+
+        row.innerHTML = `
+          <td class="rank">${index + 1}</td>
+          <td>${student.name} ${badges.join(' ')}</td>
+          <td>${student.rollNumber}</td>
+          <td class="score">${student.math.averageScore}%</td>
+          <td class="score">${student.english.averageScore}%</td>
+          <td class="score">${student.science.averageScore}%</td>
+          <td class="score">${Math.round(student.overallScore)}%</td>
+        `;
+        leaderboardBody.appendChild(row);
+      });
+    }
+
+    // Update leaderboard when page loads
+    updateLeaderboard();
+  </script>
+</body>
+</html> 
